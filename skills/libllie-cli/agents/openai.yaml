@@ -1,0 +1,4 @@
+interface:
+  display_name: "libllie-cli"
+  short_description: "Enhance, train, and evaluate low-light images"
+  default_prompt: "Use $libllie-cli to enhance, train, or evaluate low-light images with LibLLIE."

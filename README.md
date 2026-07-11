@@ -71,8 +71,39 @@ pip install libllie
 
 </details>
 
+<details close>
+<summary>Install skill</summary>
+
+Before installing the skill, complete the **Install** steps above so the
+LibLLIE package and its Python dependencies are available in your environment.
+
+Then install the skill with the Makefile from the repository root:
+
+```bash
+make link-skills
+# using uv
+make link-skills env=uv
+# using conde (should specify env name)
+make link-skills env=conda name=<env-name>
+```
+
+By default, this registers the plain `python` command.
+
+This step links the skill in the agents' global environment and writes the
+LibLLIE codebase path and Python command to `$HOME/.agents/env/libllie-cli.env`.
+
+To remove or refresh the global skill link:
+
+```bash
+make unlink-skills
+make relink-skills
+```
+
+</details>
+
 <details open>
 <summary>Quick Start</summary>
+
 ### CLI
 
 You can use either `libllie` or `llie` as the command.
