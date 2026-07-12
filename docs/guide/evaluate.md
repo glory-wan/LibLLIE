@@ -12,8 +12,8 @@ import libllie as llie
 
 ```python
 llie.evaluate(
-    en_img_dir,
-    ref_img_dir=None,
+    en,
+    ref=None,
     metrics=None,
     save_path=None,
     return_evaluator=False,
@@ -23,8 +23,8 @@ llie.evaluate(
 
 | Parameter | Meaning |
 | --- | --- |
-| `en_img_dir` | Directory containing enhanced images |
-| `ref_img_dir` | Directory containing reference images, optional |
+| `en` | Directory containing enhanced images |
+| `ref` | Directory containing reference images, optional |
 | `metrics` | Metric name or list of metric names |
 | `save_path` | Path for saving evaluation results |
 | `return_evaluator` | Whether to return the `Evaluator` instance |
@@ -48,8 +48,8 @@ When reference images are available, full-reference metrics such as PSNR and SSI
 
 ```python
 results = llie.evaluate(
-    en_img_dir="results/ZeroDCE",
-    ref_img_dir="datasets/LOL/eval15/high",
+    en="results/ZeroDCE",
+    ref="datasets/LOL/eval15/high",
     metrics=["PSNR", "SSIM"],
     save_path="results/eval_full_reference.json",
 )
@@ -65,20 +65,29 @@ When reference images are unavailable, pass only the enhanced-image directory an
 
 ```python
 results = llie.evaluate(
-    en_img_dir="results/ZeroDCE",
+    en="results/ZeroDCE",
     metrics=["NIQE"],
     save_path="results/eval_no_reference.json",
 )
 ```
 
-The specific available no-reference metrics depend on the dependencies installed in the current environment and the metrics registered in LibLLIE.
+Current registered no-reference metrics are `NIQE`, `MUSIQ`, and `PI`. They use `pyiqa` and may load model weights on first use.
+
+## Metric Reference Needs
+
+| Metrics | Reference images | Direction |
+| --- | --- | --- |
+| `PSNR`, `SSIM` | Required | Higher is better |
+| `MSE`, `MAE`, `LPIPS`, `LOE` | Required | Lower is better |
+| `MUSIQ` | Not required | Higher is better |
+| `NIQE`, `PI` | Not required | Lower is better |
 
 ## Compute Multiple Metrics
 
 ```python
 results = llie.evaluate(
-    en_img_dir="results/ZeroDCE",
-    ref_img_dir="datasets/LOL/eval15/high",
+    en="results/ZeroDCE",
+    ref="datasets/LOL/eval15/high",
     metrics=["PSNR", "SSIM", "LOE"],
 )
 ```
@@ -91,8 +100,8 @@ After passing `save_path`, evaluation results are saved to the specified path:
 
 ```python
 results = llie.evaluate(
-    en_img_dir="results/ZeroDCE",
-    ref_img_dir="datasets/LOL/eval15/high",
+    en="results/ZeroDCE",
+    ref="datasets/LOL/eval15/high",
     metrics=["PSNR", "SSIM"],
     save_path="results/evaluation.json",
 )
@@ -104,8 +113,8 @@ If you need further access to the evaluator object, set `return_evaluator=True`:
 
 ```python
 evaluator = llie.evaluate(
-    en_img_dir="results/ZeroDCE",
-    ref_img_dir="datasets/LOL/eval15/high",
+    en="results/ZeroDCE",
+    ref="datasets/LOL/eval15/high",
     metrics=["PSNR", "SSIM"],
     return_evaluator=True,
 )
@@ -128,8 +137,8 @@ saved_paths = llie.predict(
 )
 
 results = llie.evaluate(
-    en_img_dir="results/ZeroDCE",
-    ref_img_dir="datasets/LOL/eval15/high",
+    en="results/ZeroDCE",
+    ref="datasets/LOL/eval15/high",
     metrics=["PSNR", "SSIM"],
     save_path="results/ZeroDCE_eval.json",
 )
@@ -153,4 +162,4 @@ Check whether file names in the enhanced-image directory and reference-image dir
 
 ### No Reference Images
 
-Do not pass `ref_img_dir`; choose no-reference metrics such as `NIQE` or other currently registered no-reference metrics.
+Do not pass `ref`; choose no-reference metrics such as `NIQE` or other currently registered no-reference metrics.

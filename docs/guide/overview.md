@@ -108,7 +108,7 @@ result = llie.train(
     model="ZeroDCE",
     dataset="CommonDataset",
     root_dir="datasets/LOL",
-    loss="zerodce",
+    loss="zerodce_loss",
     epochs=10,
     batch_size=4,
     device="cuda",
@@ -119,8 +119,8 @@ result = llie.train(
 
 ```python
 results = llie.evaluate(
-    en_img_dir="results/ZeroDCE",
-    ref_img_dir="datasets/LOL/eval15/high",
+    en="results/ZeroDCE",
+    ref="datasets/LOL/eval15/high",
     metrics=["PSNR", "SSIM"],
     save_path="results/eval.json",
 )
