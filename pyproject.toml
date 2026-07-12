@@ -23,6 +23,7 @@ dependencies = [
     "thop>=0.1.1",
     "requests>=2.25",
     "pyiqa>=0.1.10",
+    "numba>=0.58.1",
 ]
 keywords = [
     "low-light image enhancement",
