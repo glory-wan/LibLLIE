@@ -17,7 +17,7 @@ def main():
         batch_size=1,
         num_workers=0,
         pin_memory=True,
-        loss="zerodce",
+        loss="zerodce_loss",
         optimizer="adam",
         lr=1e-4,
         epochs=3,
