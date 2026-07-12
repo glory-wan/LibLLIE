@@ -11,7 +11,7 @@ requires-python = ">=3.8"
 license = { text = "MIT" }
 authors = [
     { name = "Glory Wan", email = "glory947446@gmail.com" },
-    { name = "Qiyang Zhou", email = "" },
+    { name = "Qiyang Zhou", email = "hina778bainian@gmail.com" },
 ]
 dependencies = [
     "torch>=2.0",
