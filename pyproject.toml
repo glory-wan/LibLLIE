@@ -4,13 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "libllie"
-version = "1.0.0"
-description = "A Python library for low-light image enhancement with traditional algorithms, deep-learning models, training, prediction, and evaluation utilities."
+version = "0.1.0"
+description = "An open-source Python library for low-light image enhancement with traditional algorithms, deep-learning models, training, prediction, and evaluation utilities."
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "MIT" }
 authors = [
     { name = "Glory Wan", email = "glory947446@gmail.com" },
+    { name = "Qiyang Zhou", email = "" },
 ]
 dependencies = [
     "torch>=2.0",
@@ -57,4 +58,4 @@ llie = "libllie.cli:main"
 include = ["libllie*"]
 
 [tool.setuptools.package-data]
-"libllie.deepLearning" = ["config/*.yaml", "models/CIDNet_LICENSE.txt", "models/LLFormer_LICENSE.txt"]
+"libllie.deepLearning" = ["config/*.yaml", ]
