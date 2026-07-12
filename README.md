@@ -83,20 +83,27 @@ Then install the skill with the Makefile from the repository root:
 make link-skills
 # using uv
 make link-skills env=uv
-# using conde (should specify env name)
+# using conda (should specify env name)
 make link-skills env=conda name=<env-name>
 ```
 
 By default, this registers the plain `python` command.
 
 This step links the skill in the agents' global environment and writes the
-LibLLIE codebase path and Python command to `$HOME/.agents/env/libllie-cli.env`.
+LibLLIE codebase path and Python command to `$HOME/.agents/env/libllie-cli.env`
+unless that file already defines both `LIBLLIE_ROOT` and `LIBLLIE_PYTHON`.
 
-To remove or refresh the global skill link:
+To remove or refresh the global skill link without changing the environment:
 
 ```bash
 make unlink-skills
 make relink-skills
+```
+
+To clear the registered environment:
+
+```bash
+make clean-skill-env
 ```
 
 </details>
