@@ -17,11 +17,19 @@ link-skills:
 		exit 1; \
 	fi
 	@mkdir -p "$(AGENTS_SKILL_DIR)"
+	@if [ ! -w "$(AGENTS_SKILL_DIR)" ]; then \
+		echo "Agents skill directory is not writable: $(AGENTS_SKILL_DIR)"; \
+		exit 1; \
+	fi
 	@if [ -e "$(AGENTS_SKILL_LINK)" ] && [ ! -L "$(AGENTS_SKILL_LINK)" ]; then \
 		echo "Refusing to replace non-symlink: $(AGENTS_SKILL_LINK)"; \
 		exit 1; \
 	fi
 	@mkdir -p "$(AGENTS_ENV_DIR)"
+	@if [ ! -w "$(AGENTS_ENV_DIR)" ]; then \
+		echo "Agents env directory is not writable: $(AGENTS_ENV_DIR)"; \
+		exit 1; \
+	fi
 	@set -e; \
 	env_kind="$$(printf '%s' "$(ENV_ARG)" | tr '[:upper:]' '[:lower:]')"; \
 	case "$$env_kind" in \
@@ -52,27 +60,24 @@ link-skills:
 	esac; \
 	[ -n "$$python_cmd" ] || { echo "Python environment not found for env=$$env_kind."; exit 1; }; \
 	tmp="$(AGENTS_ENV_FILE).tmp"; \
-	if [ -f "$(AGENTS_ENV_FILE)" ]; then \
-		grep -v \
-			-e '^export LIBLLIE_ROOT=' \
-			-e '^export LIBLLIE_PYTHON_ENV=' \
-			-e '^export LIBLLIE_PYTHON=' \
-			-e '^export LIBLLIE_CLI=' \
-			"$(AGENTS_ENV_FILE)" > "$$tmp" || true; \
-	else \
-		: > "$$tmp"; \
-	fi; \
+	: > "$$tmp"; \
 	printf 'export LIBLLIE_ROOT="%s"\n' "$(LIBLLIE_ROOT)" >> "$$tmp"; \
-	printf 'export LIBLLIE_PYTHON_ENV="%s"\n' "$$env_kind" >> "$$tmp"; \
 	printf 'export LIBLLIE_PYTHON="%s"\n' "$$python_cmd" >> "$$tmp"; \
-	printf 'export LIBLLIE_CLI="%s -m libllie.cli"\n' "$$python_cmd" >> "$$tmp"; \
 	mv "$$tmp" "$(AGENTS_ENV_FILE)"
 	@echo "Registered LibLLIE root and Python environment in $(AGENTS_ENV_FILE)"
 	@ln -sfn "$(SKILL_SOURCE)" "$(AGENTS_SKILL_LINK)"
 
 unlink-skills:
+	@if [ -e "$(AGENTS_SKILL_LINK)" ] && [ ! -w "$(AGENTS_SKILL_DIR)" ]; then \
+		echo "Agents skill directory is not writable: $(AGENTS_SKILL_DIR)"; \
+		exit 1; \
+	fi
 	@if [ -L "$(AGENTS_SKILL_LINK)" ]; then \
 		rm "$(AGENTS_SKILL_LINK)"; \
+	fi
+	@if [ -f "$(AGENTS_ENV_FILE)" ] && [ ! -w "$(AGENTS_ENV_DIR)" ]; then \
+		echo "Agents env directory is not writable: $(AGENTS_ENV_DIR)"; \
+		exit 1; \
 	fi
 	@if [ -f "$(AGENTS_ENV_FILE)" ]; then \
 		rm "$(AGENTS_ENV_FILE)"; \
