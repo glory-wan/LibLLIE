@@ -1,5 +1,5 @@
 model:
-  name: ZeroDCEPlusPlus
+  name: ZeroDCE
   params:
 #    input_channels: 3
 #    number_f: 32

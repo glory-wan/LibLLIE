@@ -4,6 +4,17 @@ from typing import Any, Dict
 import torch
 
 
+def get_default_device() -> str:
+    if torch.cuda.is_available():
+        return "cuda"
+
+    mps_backend = getattr(torch.backends, "mps", None)
+    if mps_backend is not None and mps_backend.is_available():
+        return "mps"
+
+    return "cpu"
+
+
 DEFAULT_TRAIN_CONFIG: Dict[str, Any] = {
     "model": {
         "name": None,
@@ -49,7 +60,7 @@ DEFAULT_TRAIN_CONFIG: Dict[str, Any] = {
         "amp": False,
         "resume": None,
         "seed": 42,
-        "device": "cuda" if torch.cuda.is_available() else "cpu",
+        "device": get_default_device(),
     },
 }
 

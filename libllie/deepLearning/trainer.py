@@ -17,7 +17,7 @@ from tqdm import tqdm
 
 from libllie.deepLearning.models import LLIEModel
 from libllie.deepLearning.loss import BaseLoss
-from libllie.deepLearning.config import deep_update, get_default_train_config
+from libllie.deepLearning.config import deep_update, get_default_device, get_default_train_config
 from libllie.data.datasets import BaseDataset
 from libllie.data import datasets as dataset_module
 from libllie.utils import log_info_env, device_display_name
@@ -55,12 +55,7 @@ class Trainer:
         self.config = self._with_defaults(self.user_config)
         self._validate_required_config()
 
-        self.device = torch.device(
-            self.config["train"].get(
-                "device",
-                "cuda" if torch.cuda.is_available() else "cpu",
-            )
-        )
+        self.device = torch.device(self.config["train"].get("device") or get_default_device())
 
         self.start_epoch = 1
         self.best_val_loss = float("inf")
@@ -82,14 +77,13 @@ class Trainer:
         self.criterion = self._build_loss()
         self.optimizer = self._build_optimizer()
         self.scheduler = self._build_scheduler()
-        self.scaler = torch.cuda.amp.GradScaler(
-            enabled=bool(self.config["train"].get("amp", False)) and self.device.type == "cuda"
-        )
+        self.amp_enabled = bool(self.config["train"].get("amp", False)) and self.device.type == "cuda"
+        self.scaler = torch.amp.GradScaler("cuda", enabled=self.amp_enabled)
         self._save_training_config()
 
-        resume_path = self.config["train"].get("resume")
-        if resume_path:
-            self.load_checkpoint(resume_path)
+        resume = self.config["train"].get("resume")
+        if resume:
+            self.load_checkpoint(resume)
         log_info_env(device=self.device)
         self.print_training_info()
 
@@ -191,6 +185,7 @@ class Trainer:
             "grad_clip": ("train", "grad_clip"),
             "amp": ("train", "amp"),
             "resume": ("train", "resume"),
+            "resume_path": ("train", "resume"),
             "seed": ("train", "seed"),
             "device": ("train", "device"),
         }
@@ -904,7 +899,7 @@ class Trainer:
 
             self.optimizer.zero_grad(set_to_none=True)
 
-            with torch.cuda.amp.autocast(enabled=self.scaler.is_enabled()):
+            with torch.amp.autocast("cuda", enabled=self.amp_enabled):
                 loss, _ = self._compute_batch_loss(batch)
 
             self.scaler.scale(loss).backward()
