@@ -31,7 +31,7 @@ metrics.
 
 ## Highlights
 
-- Unified top-level API: `predict`, `train`, `evaluate`, `imread`, `imwrite`.
+- Unified top-level API: `predict`, `train`, `evaluate`, `imread`, `imwrite`, `list`.
 - Training pipeline with YAML configuration, checkpoints, validation, and resumable experiments.
 - Evaluation utilities for full-reference and no-reference image quality metrics such as PSNR, SSIM, MSE, MAE, LPIPS, LOE, NIQE, MUSIQ, and PI.
 - Automatic component registration for custom extensions.
@@ -40,7 +40,7 @@ metrics.
 
 See below for a compact quick start. For complete guidance, use the full docs:
 
-| Topic | English | Chinese |
+| Topic | English | 中文 |
 | --- | --- | --- |
 | API overview | [docs/guide/overview.md](docs/guide/overview.md) | [docs-zh-CN/guide/overview.md](docs-zh-CN/guide/overview.md) |
 | Image I/O | [docs/guide/image_io.md](docs/guide/image_io.md) | [docs-zh-CN/guide/image_io.md](docs-zh-CN/guide/image_io.md) |
@@ -71,46 +71,17 @@ pip install libllie
 
 </details>
 
-<details close>
-<summary>Install skill</summary>
-
-Before installing the skill, complete the **Install** steps above so the
-LibLLIE package and its Python dependencies are available in your environment.
-
-Then install the skill with the Makefile from the repository root:
-
-```bash
-make link-skills
-# using uv
-make link-skills env=uv
-# using conde (should specify env name)
-make link-skills env=conda name=<env-name>
-```
-
-By default, this registers the plain `python` command.
-
-This step links the skill in the agents' global environment and writes the
-LibLLIE codebase path and Python command to `$HOME/.agents/env/libllie-cli.env`.
-
-To remove or refresh the global skill link:
-
-```bash
-make unlink-skills
-make relink-skills
-```
-
-</details>
-
 <details open>
 <summary>Quick Start</summary>
-
 ### CLI
 
 You can use either `libllie` or `llie` as the command.
 
 ```bash
 # List registered models, algorithms, metrics, losses, and datasets
-libllie list # or llie list
+libllie list 
+# or 
+llie list
 
 # Enhance one image with a traditional method
 libllie predict he input.jpg -o results/he_output.png
@@ -121,6 +92,10 @@ llie predict he input.jpg -o results/he_output.png
 libllie evaluate --en-img-dir path/to/enhanced/images/dir --ref-img-dir path/to/reference/images/dir --metrics PSNR SSIM
 # or
 llie eval --en path/to/enhanced/images/dir --ref path/to/reference/images/dir --metrics PSNR SSIM
+
+
+# Train a model
+llie train libllie/deepLearning/config/ZeroDCE.yaml --kwargs root_dir="D:/datasets/LOL-v1" device=cuda epochs=100
 ```
 
 ### Python
@@ -155,45 +130,51 @@ enhanced, saved_path = llie.predict(
 <details open>
 <summary>Deep-Learning Models</summary>
 
-| Model | years | venue | paper | official code |
-| --- | --- | --- | --- | --- |
-| [Zero-DCE](docs/models/zero-dce.md) | 2020 | CVPR | [paper](https://openaccess.thecvf.com/content_CVPR_2020/papers/Guo_Zero-Reference_Deep_Curve_Estimation_for_Low-Light_Image_Enhancement_CVPR_2020_paper.pdf) | [code](https://github.com/Li-Chongyi/Zero-DCE) |
-| [Zero-DCE++](docs/models/zero-dce++.md) | 2021 | IEEE TPAMI | [paper](https://ieeexplore.ieee.org/document/9369102/) | [code](https://github.com/Li-Chongyi/Zero-DCE_extension) |
-| [SCI](docs/models/sci.md) | 2022 | CVPR | [paper](https://openaccess.thecvf.com/content/CVPR2022/papers/Ma_Toward_Fast_Flexible_and_Robust_Low-Light_Image_Enhancement_CVPR_2022_paper.pdf) | [code](https://github.com/vis-opt-group/SCI) |
-| [RUAS](docs/models/ruas.md) | 2021 | CVPR | [paper](https://openaccess.thecvf.com/content/CVPR2021/papers/Liu_Retinex-Inspired_Unrolling_With_Cooperative_Prior_Architecture_Search_for_Low-Light_Image_CVPR_2021_paper.pdf) | [code](https://github.com/KarelZhang/RUAS) |
-| [URetinex-Net](docs/models/uretinex-net.md) | 2022 | CVPR | [paper](https://openaccess.thecvf.com/content/CVPR2022/papers/Wu_URetinex-Net_Retinex-Based_Deep_Unfolding_Network_for_Low-Light_Image_Enhancement_CVPR_2022_paper.pdf) | [code](https://github.com/AndersonYong/URetinex-Net) |
-| [RetinexFormer](docs/models/retinexformer.md) | 2023 | ICCV | [paper](https://openaccess.thecvf.com/content/ICCV2023/papers/Cai_Retinexformer_One-stage_Retinex-based_Transformer_for_Low-light_Image_Enhancement_ICCV_2023_paper.pdf) | [code](https://github.com/caiyuanhao1998/Retinexformer) |
-| [LEDNet](docs/models/lednet.md) | 2022 | ECCV | [paper](https://arxiv.org/pdf/2202.03373) | [code](https://github.com/sczhou/LEDNet) |
-| [Zero-IG](docs/models/zero-ig.md) | 2024 | CVPR | [paper](https://openaccess.thecvf.com/content/CVPR2024/papers/Shi_ZERO-IG_Zero-Shot_Illumination-Guided_Joint_Denoising_and_Adaptive_Enhancement_for_Low-Light_CVPR_2024_paper.pdf) | [code](https://github.com/Doyle59217/ZeroIG) |
-| [DarkIR](docs/models/darkir.md) | 2025 | CVPR | [paper](https://openaccess.thecvf.com/content/CVPR2025/papers/Feijoo_DarkIR_Robust_Low-Light_Image_Restoration_CVPR_2025_paper.pdf) | [code](https://github.com/cidautai/DarkIR) |
-| [LLNet](docs/models/llnet.md) | 2017 | Pattern Recognition | [paper](https://doi.org/10.1016/j.patcog.2016.06.008) | [code](https://github.com/kglore/llnet_color) |
-| [KinD](docs/models/kind.md) | 2019 | ACM MM | [paper](https://doi.org/10.1145/3343031.3350926) | [code](https://github.com/zhangyhuaee/KinD) |
-| [KinD++](docs/models/kind++.md) | 2021 | IJCV | [paper](https://doi.org/10.1007/s11263-020-01407-x) | [code](https://github.com/zhangyhuaee/KinD_plus) |
-| [EnlightenGAN](docs/models/enlightengan.md) | 2021 | IEEE TIP | [paper](https://doi.org/10.1109/TIP.2021.3051462) | [code](https://github.com/VITA-Group/EnlightenGAN) |
-| [LLFlow](docs/models/llflow.md) | 2022 | AAAI | [paper](https://doi.org/10.1609/aaai.v36i3.20162) | [code](https://github.com/wyf0912/LLFlow) |
-| [HVI-CIDNet](docs/models/cidnet.md) | 2025 | CVPR | [paper](https://arxiv.org/abs/2502.20272) | [code](https://github.com/Fediory/HVI-CIDNet) |
-| [PairLIE](docs/models/pairlie.md) | 2023 | CVPR | [paper](https://openaccess.thecvf.com/content/CVPR2023/papers/Fu_Learning_a_Simple_Low-Light_Image_Enhancer_From_Paired_Low-Light_Instances_CVPR_2023_paper.pdf) | [code](https://github.com/zhenqifu/PairLIE) |
-| [LLFormer](docs/models/llformer.md) | 2023 | AAAI (Oral) | [paper](https://arxiv.org/abs/2212.11548) | [code](https://github.com/TaoWangzj/LLFormer) |
+| Model | Year | Venue | Paper | Official GitHub | Upstream license |
+| --- | --- | --- | --- | --- | --- |
+| [LLNet](docs/models/llnet.md) | 2017 | Pattern Recognition | [paper](https://doi.org/10.1016/j.patcog.2016.06.008) | [code](https://github.com/kglore/llnet_color) | - |
+| [KinD](docs/models/kind.md) | 2019 | ACM MM | [paper](https://doi.org/10.1145/3343031.3350926) | [code](https://github.com/zhangyhuaee/KinD) | - |
+| [Zero-DCE](docs/models/zero-dce.md) | 2020 | CVPR | [paper](https://openaccess.thecvf.com/content_CVPR_2020/papers/Guo_Zero-Reference_Deep_Curve_Estimation_for_Low-Light_Image_Enhancement_CVPR_2020_paper.pdf) | [code](https://github.com/Li-Chongyi/Zero-DCE) | CC BY-NC 4.0 |
+| [Zero-DCE++](docs/models/zero-dce++.md) | 2021 | IEEE TPAMI | [paper](https://ieeexplore.ieee.org/document/9369102/) | [code](https://github.com/Li-Chongyi/Zero-DCE_extension) | CC BY-NC 4.0 |
+| [RUAS](docs/models/ruas.md) | 2021 | CVPR | [paper](https://openaccess.thecvf.com/content/CVPR2021/papers/Liu_Retinex-Inspired_Unrolling_With_Cooperative_Prior_Architecture_Search_for_Low-Light_Image_CVPR_2021_paper.pdf) | [code](https://github.com/KarelZhang/RUAS) | - |
+| [KinD++](docs/models/kind++.md) | 2021 | IJCV | [paper](https://doi.org/10.1007/s11263-020-01407-x) | [code](https://github.com/zhangyhuaee/KinD_plus) | - |
+| [EnlightenGAN](docs/models/enlightengan.md) | 2021 | IEEE TIP | [paper](https://doi.org/10.1109/TIP.2021.3051462) | [code](https://github.com/VITA-Group/EnlightenGAN) | - |
+| [SCI](docs/models/sci.md) | 2022 | CVPR | [paper](https://openaccess.thecvf.com/content/CVPR2022/papers/Ma_Toward_Fast_Flexible_and_Robust_Low-Light_Image_Enhancement_CVPR_2022_paper.pdf) | [code](https://github.com/vis-opt-group/SCI) | - |
+| [URetinex-Net](docs/models/uretinex-net.md) | 2022 | CVPR | [paper](https://openaccess.thecvf.com/content/CVPR2022/papers/Wu_URetinex-Net_Retinex-Based_Deep_Unfolding_Network_for_Low-Light_Image_Enhancement_CVPR_2022_paper.pdf) | [code](https://github.com/AndersonYong/URetinex-Net) | MIT |
+| [LEDNet](docs/models/lednet.md) | 2022 | ECCV | [paper](https://arxiv.org/pdf/2202.03373) | [code](https://github.com/sczhou/LEDNet) | S-Lab License 1.0 |
+| [LLFlow](docs/models/llflow.md) | 2022 | AAAI | [paper](https://doi.org/10.1609/aaai.v36i3.20162) | [code](https://github.com/wyf0912/LLFlow) | CC BY-NC-SA 4.0 |
+| [RetinexFormer](docs/models/retinexformer.md) | 2023 | ICCV | [paper](https://openaccess.thecvf.com/content/ICCV2023/papers/Cai_Retinexformer_One-stage_Retinex-based_Transformer_for_Low-light_Image_Enhancement_ICCV_2023_paper.pdf) | [code](https://github.com/caiyuanhao1998/Retinexformer) | - |
+| [PairLIE](docs/models/pairlie.md) | 2023 | CVPR | [paper](https://openaccess.thecvf.com/content/CVPR2023/papers/Fu_Learning_a_Simple_Low-Light_Image_Enhancer_From_Paired_Low-Light_Instances_CVPR_2023_paper.pdf) | [code](https://github.com/zhenqifu/PairLIE) | - |
+| [LLFormer](docs/models/llformer.md) | 2023 | AAAI (Oral) | [paper](https://arxiv.org/abs/2212.11548) | [code](https://github.com/TaoWangzj/LLFormer) | CC BY-NC-SA 4.0 |
+| [Zero-IG](docs/models/zero-ig.md) | 2024 | CVPR | [paper](https://openaccess.thecvf.com/content/CVPR2024/papers/Shi_ZERO-IG_Zero-Shot_Illumination-Guided_Joint_Denoising_and_Adaptive_Enhancement_for_Low-Light_CVPR_2024_paper.pdf) | [code](https://github.com/Doyle59217/ZeroIG) | - |
+| [DarkIR](docs/models/darkir.md) | 2025 | CVPR | [paper](https://openaccess.thecvf.com/content/CVPR2025/papers/Feijoo_DarkIR_Robust_Low-Light_Image_Restoration_CVPR_2025_paper.pdf) | [code](https://github.com/cidautai/DarkIR) | MIT |
+| [HVI-CIDNet](docs/models/cidnet.md) | 2025 | CVPR | [paper](https://arxiv.org/abs/2502.20272) | [code](https://github.com/Fediory/HVI-CIDNet) | MIT |
+
+The license column reports the license explicitly stated by each upstream
+repository. A `-` means that no explicit upstream license was found; a public
+repository without a license does not by itself grant reuse rights. Some listed
+licenses restrict commercial use and are therefore not OSI-approved open-source
+licenses.
 
 </details>
 
 <details>
 <summary>Traditional Algorithms</summary>
 
-| Algorithm | Documentation |
-| --- | --- |
-| HE | [docs/algorithms/he.md](docs/algorithms/he.md) |
-| AHE | [docs/algorithms/ahe.md](docs/algorithms/ahe.md) |
-| CLAHE | [docs/algorithms/clahe.md](docs/algorithms/clahe.md) |
-| RCLAHE | [docs/algorithms/rclahe.md](docs/algorithms/rclahe.md) |
-| Gamma | [docs/algorithms/gamma.md](docs/algorithms/gamma.md) |
-| GCP | [docs/algorithms/gcp.md](docs/algorithms/gcp.md) |
-| LIME | [docs/algorithms/lime.md](docs/algorithms/lime.md) |
-| BIMEF | [docs/algorithms/bimef.md](docs/algorithms/bimef.md) |
-| NPE | [docs/algorithms/npe.md](docs/algorithms/npe.md) |
-| Retinex | [docs/algorithms/retinex.md](docs/algorithms/retinex.md) |
-| Log | [docs/algorithms/log.md](docs/algorithms/log.md) |
-| DCP | [docs/algorithms/dcp.md](docs/algorithms/dcp.md) |
+| Algorithm | Documentation | Official GitHub | Upstream license |
+| --- | --- | --- | --- |
+| Gamma | [docs/algorithms/gamma.md](docs/algorithms/gamma.md) | - | - |
+| Log | [docs/algorithms/log.md](docs/algorithms/log.md) | - | - |
+| HE | [docs/algorithms/he.md](docs/algorithms/he.md) | - | - |
+| AHE | [docs/algorithms/ahe.md](docs/algorithms/ahe.md) | - | - |
+| CLAHE | [docs/algorithms/clahe.md](docs/algorithms/clahe.md) | - | - |
+| RCLAHE | [docs/algorithms/rclahe.md](docs/algorithms/rclahe.md) | - | - |
+| Retinex | [docs/algorithms/retinex.md](docs/algorithms/retinex.md) | - | - |
+| DCP | [docs/algorithms/dcp.md](docs/algorithms/dcp.md) | - | - |
+| NPE | [docs/algorithms/npe.md](docs/algorithms/npe.md) | - | - |
+| LIME | [docs/algorithms/lime.md](docs/algorithms/lime.md) | - | - |
+| BIMEF | [docs/algorithms/bimef.md](docs/algorithms/bimef.md) | - | - |
+| GCP | [docs/algorithms/gcp.md](docs/algorithms/gcp.md) | [code](https://github.com/TripleJ2543/Low_Light_Pattern_Recognition_2023) | - |
 
 </details>
 

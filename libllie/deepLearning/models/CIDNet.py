@@ -271,7 +271,6 @@ class ILightenCrossAttention(nn.Module):
 class CIDNet(LLIEModel):
     """Color and Intensity Decoupling Network operating in HVI space."""
 
-    name = "CIDNet"
     aliases = ["HVI-CIDNet"]
 
     def __init__(self, config: Optional[Dict[str, Any]] = None, **kwargs: Any) -> None:

@@ -273,7 +273,6 @@ class KinDPlusPlus(LLIEModel):
     over-smoothing.
     """
 
-    name = 'KinDPlusPlus'
     aliases = ['Kind++']
 
     def __init__(self, config: Optional[Dict[str, Any]] = None, **kwargs: Any) -> None:
