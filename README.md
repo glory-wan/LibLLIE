@@ -92,10 +92,6 @@ llie predict he input.jpg -o results/he_output.png
 libllie evaluate --en-img-dir path/to/enhanced/images/dir --ref-img-dir path/to/reference/images/dir --metrics PSNR SSIM
 # or
 llie eval --en path/to/enhanced/images/dir --ref path/to/reference/images/dir --metrics PSNR SSIM
-
-
-# Train a model
-llie train libllie/deepLearning/config/ZeroDCE.yaml --kwargs root_dir="D:/datasets/LOL-v1" device=cuda epochs=100
 ```
 
 ### Python
@@ -214,6 +210,23 @@ Or train from YAML:
 
 ```python
 llie.train("libllie/deepLearning/config/ZeroDCE.yaml")
+```
+
+You can also train from the command line. Both `llie` and `libllie` are
+supported as command names:
+
+```bash
+# Train from YAML after setting data.root_dir in the configuration file
+llie train libllie/deepLearning/config/ZeroDCE.yaml
+
+# Override YAML settings from the command line
+llie train libllie/deepLearning/config/ZeroDCE.yaml --kwargs root_dir=datasets/LOL epochs=10 batch_size=4 device=cuda
+
+# Train entirely from command-line arguments
+llie train --kwargs model=ZeroDCE root_dir=datasets/LOL epochs=10 batch_size=4 device=cuda
+
+# Resume training from a checkpoint
+llie train libllie/deepLearning/config/ZeroDCE.yaml --kwargs root_dir=datasets/LOL resume=checkpoints/ZeroDCE_LOLv1Dataset/checkpoints/last.pt
 ```
 
 Training outputs are saved under `checkpoints/{Model}_{Dataset}` by default,
