@@ -1,7 +1,7 @@
 """Top-level convenience API for_teach LibLLIE."""
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Mapping, Optional, Type, Union
 
 
 _PREDICT_CALL_KWARGS = {
@@ -14,6 +14,8 @@ _PREDICT_CALL_KWARGS = {
     "headers",
     "verify_ssl",
 }
+
+_MISSING = object()
 
 
 def _split_predict_kwargs(kwargs: Dict[str, Any]):
@@ -100,21 +102,26 @@ def train(config: Optional[Union[str, Path, Dict[str, Any]]] = None, **kwargs: A
 
 
 def evaluate(
-    en: Union[str, Path],
-    ref: Optional[Union[str, Path]] = None,
+    en_img_dir: Any = _MISSING,
+    ref_img_dir: Any = _MISSING,
     metrics: Optional[Union[str, List[str]]] = None,
     save_path: Optional[Union[str, Path]] = None,
     return_evaluator: bool = False,
+    *,
+    en: Any = _MISSING,
+    ref: Any = _MISSING,
     **kwargs: Any,
 ):
     """Evaluate enhanced images through the unified top-level API.
 
     Args:
-        en: Directory containing enhanced images.
-        ref: Optional reference image directory.
+        en_img_dir: Directory containing enhanced images.
+        ref_img_dir: Optional reference image directory.
         metrics: Metric name or list of metric names.
         save_path: Optional JSON result path.
         return_evaluator: Return the Evaluator instance instead of results.
+        en: Backward-compatible alias for ``en_img_dir``.
+        ref: Backward-compatible alias for ``ref_img_dir``.
         **kwargs: Additional keyword arguments forwarded to ``Evaluator``.
 
     Returns:
@@ -124,9 +131,29 @@ def evaluate(
     from libllie.evaluation import Evaluator
     import libllie.evaluation.metrics  # noqa: F401
 
+    if en is not _MISSING:
+        if en_img_dir is not _MISSING:
+            raise TypeError(
+                "evaluate() received both 'en_img_dir' and its alias 'en'"
+            )
+        en_img_dir = en
+
+    if ref is not _MISSING:
+        if ref_img_dir is not _MISSING:
+            raise TypeError(
+                "evaluate() received both 'ref_img_dir' and its alias 'ref'"
+            )
+        ref_img_dir = ref
+
+    if en_img_dir is _MISSING:
+        raise TypeError("evaluate() missing required argument: 'en_img_dir'")
+
+    if ref_img_dir is _MISSING:
+        ref_img_dir = None
+
     evaluator = Evaluator(
-        en_img_dir=str(en),
-        ref_img_dir=str(ref) if ref is not None else None,
+        en_img_dir=str(en_img_dir),
+        ref_img_dir=str(ref_img_dir) if ref_img_dir is not None else None,
         metrics=metrics,
         save_path=save_path,
         **kwargs,
@@ -252,23 +279,65 @@ def list_datasets() -> List[str]:
     return BaseDataset.list_registered_datasets()
 
 
-def list_available() -> Dict[str, List[str]]:
-    """List available public components grouped by category.
+def _component_rows(registry: Mapping[str, Type[Any]]) -> List[Dict[str, Any]]:
+    """Build display rows from a component registry.
+
+    Registries contain one entry for every accepted lookup key, so a component
+    class usually appears more than once through its class name, configured
+    name, and aliases. Rows are therefore deduplicated by class object.
+
+    Args:
+        registry: Mapping of normalized lookup keys to component classes.
 
     Returns:
-        Dictionary containing available models, algorithms, metrics, losses, and
-        datasets.
+        Component rows sorted by implementation class name. Each row contains
+        the class ``name`` and the aliases declared by that class.
     """
-    available_sources =  {
-        "models": list_models(),
-        "algorithms": list_algorithms(),
-        "metrics": list_metrics(),
-        "losses": list_losses(),
-        "datasets": list_datasets(),
+    component_classes = set(registry.values())
+    rows: List[Dict[str, Any]] = []
+
+    for component_class in sorted(
+        component_classes,
+        key=lambda value: value.__name__.casefold(),
+    ):
+        aliases = getattr(component_class, "aliases", [])
+        if isinstance(aliases, str):
+            aliases = [aliases]
+        else:
+            aliases = list(aliases)
+
+        rows.append(
+            {
+                "name": component_class.__name__,
+                "aliases": aliases,
+            }
+        )
+
+    return rows
+
+
+def list_available() -> Dict[str, List[Dict[str, Any]]]:
+    """List public component classes and their declared aliases.
+
+    The returned rows are grouped by component category. Unlike the individual
+    ``list_*`` functions, registry lookup keys are not flattened into one list:
+    each implementation class appears exactly once and keeps its aliases as a
+    separate field.
+
+    Returns:
+        Dictionary containing model, algorithm, metric, loss, and dataset rows.
+        Every row has ``name`` and ``aliases`` keys.
+    """
+    from libllie.data import BaseDataset
+    from libllie.deepLearning.loss import BaseLoss
+    from libllie.deepLearning.models import LLIEModel
+    from libllie.evaluation import BaseMetric
+    from libllie.traditional.algorithms import LLIEnhancer
+
+    return {
+        "models": _component_rows(LLIEModel._model_registry),
+        "algorithms": _component_rows(LLIEnhancer._enhancer_registry),
+        "metrics": _component_rows(BaseMetric._metric_registry),
+        "losses": _component_rows(BaseLoss._loss_registry),
+        "datasets": _component_rows(BaseDataset._dataset_registry),
     }
-
-    print("Available components:")
-    for k, v in available_sources.items():
-        print(f"{k}:\n {v} \n")
-
-    return available_sources
