@@ -22,15 +22,14 @@ LLFormer 来自 AAAI 2023 Oral 论文 **Ultra-High-Definition Low-Light Image En
 | 模型名称 | `LLFormer`（别名：`LL-Former`） |
 | 损失实现 | `libllie/deepLearning/loss/LLFormer_Loss.py` |
 | 损失名称 | `llformer` |
-| 成对 patch 数据集 | `libllie/data/datasets/LLFormer.py` |
 
 默认网络与官方训练入口一致：`dim=16`、block 数 `[2, 4, 8, 16]`、head 数 `[1, 2, 4, 8]`、两个 refinement block、WithBias LayerNorm，并关闭全局残差 skip。
 
 官方训练入口实际使用 PyTorch `SmoothL1Loss`，LibLLIE 将同一目标注册为 `llformer`。上游工具文件中附带的 Charbonnier、Edge、SSIM 和 PSNR 损失并未用于论文训练命令，因此默认不启用。
 
-## 数据布局与 patch 训练
+## 数据布局
 
-`LLFormerPairedDataset` 支持标准成对布局：
+配置使用的 `CommonDataset` 支持标准成对布局：
 
 ```text
 dataset/
@@ -42,7 +41,7 @@ dataset/
     high/
 ```
 
-训练默认对低照图和 GT 执行同步 `128×128` 随机裁剪，并使用与官方加载器一致的翻转/旋转增强；验证默认保留完整图像。可以通过 `data.train_params.crop_size` 修改 patch 尺寸，建议尺寸可被 16 整除。
+低照图与目标图应使用相同文件名。输入尺寸不能被 16 整除时，LLFormer 会自动进行填充。
 
 ## 训练
 

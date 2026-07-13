@@ -260,6 +260,56 @@ def _cmd_list_available(args: argparse.Namespace) -> Any:
     return llie.list_available()
 
 
+def _format_component_table(category: str, rows: Iterable[Dict[str, Any]]) -> str:
+    """Format one component category as an ASCII table.
+
+    Args:
+        category: Component category heading.
+        rows: Component rows with ``name`` and ``aliases`` fields.
+
+    Returns:
+        A category heading followed by a two-column table.
+    """
+    table_rows = []
+    for row in rows:
+        aliases = row.get("aliases", [])
+        aliases_text = ", ".join(str(alias) for alias in aliases) if aliases else "-"
+        table_rows.append((str(row.get("name", "")), aliases_text))
+
+    name_width = max([len("name"), *(len(name) for name, _ in table_rows)])
+    aliases_width = max([len("aliases"), *(len(aliases) for _, aliases in table_rows)])
+    separator = f"+-{'-' * name_width}-+-{'-' * aliases_width}-+"
+
+    lines = [
+        category,
+        separator,
+        f"| {'name'.ljust(name_width)} | {'aliases'.ljust(aliases_width)} |",
+        separator,
+    ]
+    lines.extend(
+        f"| {name.ljust(name_width)} | {aliases.ljust(aliases_width)} |"
+        for name, aliases in table_rows
+    )
+    lines.append(separator)
+    return "\n".join(lines)
+
+
+def _is_component_listing(value: Any) -> bool:
+    """Check whether a command result is a detailed component listing."""
+    if not isinstance(value, dict) or not value:
+        return False
+
+    for rows in value.values():
+        if not isinstance(rows, list):
+            return False
+        if any(
+            not isinstance(row, dict) or not {"name", "aliases"}.issubset(row)
+            for row in rows
+        ):
+            return False
+    return True
+
+
 def _parse_key_value_args(items: Iterable[str]) -> Dict[str, Any]:
     """Parse ``KEY=VALUE`` CLI arguments into keyword arguments.
 
@@ -327,6 +377,13 @@ def _print_result(result: Any) -> None:
         result: Command result.
     """
     if result is None:
+        return
+
+    if _is_component_listing(result):
+        print("Available components:")
+        for category, rows in result.items():
+            print()
+            print(_format_component_table(category, rows))
         return
 
     if _is_single_prediction_result(result):

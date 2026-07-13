@@ -18,7 +18,7 @@ PairLIE 来自 CVPR 2023 论文 **Learning a Simple Low-light Image Enhancer fro
 | 模型名称 | `PairLIE`（别名：`Pair-LIE`） |
 | 损失实现 | `libllie/deepLearning/loss/PairLIE_Loss.py` |
 | 损失名称 | `pairlie` |
-| 数据集实现 | `libllie/data/datasets/PairLIE.py` |
+| 数据集实现 | `libllie/data/datasets/CommonDataset.py` |
 
 推理阶段的增强结果为：
 
@@ -40,21 +40,20 @@ L = consistency_weight * MSE(R1, R2)
 
 ## 训练数据布局
 
-PairLIE 需要同一场景的两张不同低照实例，而不是常规的低照/正常光图像对。新增的 `PairLIEInstancesDataset` 支持官方布局：
+PairLIE 需要同一场景的两张不同低照实例，而不是常规的低照/正常光图像对。配置使用 `CommonDataset` 的成对目录布局：
 
 ```text
 PairLIE-training-dataset/
-  1/
-    exposure_1.png
-    exposure_2.png
-    ...
-  2/
-    exposure_1.png
-    exposure_2.png
-    ...
+  train/
+    low/
+      scene_1.png
+      scene_2.png
+    high/
+      scene_1.png
+      scene_2.png
 ```
 
-也支持 `root/train/scene/...` 形式。数据集每次从一个场景目录中随机选择两张不同图像，并对两张图使用完全相同的随机裁剪。每个场景至少需要两张受支持的图像。
+将第一张曝光图放入 `low`，第二张曝光图放入 `high`，并使用相同文件名。对于 PairLIE，`high` 中的图像是另一张低照观测，而不是正常光 GT。
 
 ## 训练
 

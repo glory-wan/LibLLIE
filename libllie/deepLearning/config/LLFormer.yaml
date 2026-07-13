@@ -25,7 +25,7 @@ model:
     tile_size: null
     tile_overlap: 0
 data:
-  dataset: LLFormerPairedDataset
+  dataset: CommonDataset
   root_dir: path/to/your/dataset
   train_split: train
   val_split: val
@@ -33,14 +33,6 @@ data:
   num_workers: 8
   pin_memory: true
   return_filename: true
-  train_params:
-    crop_size: 128
-    augment: true
-    center_crop: false
-  val_params:
-    crop_size: null
-    augment: false
-    center_crop: false
 loss:
   name: llformer
   params:
