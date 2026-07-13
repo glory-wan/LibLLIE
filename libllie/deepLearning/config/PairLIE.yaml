@@ -6,7 +6,7 @@ model:
     enhancement_gamma: 0.2
     clamp_output: true
 data:
-  dataset: PairLIEInstancesDataset
+  dataset: CommonDataset
   root_dir: path/to/PairLIE-training-dataset
   train_split: train
   val_split: null
@@ -14,8 +14,6 @@ data:
   num_workers: 0
   pin_memory: true
   return_filename: true
-  params:
-    crop_size: 128
 loss:
   name: pairlie
   params:

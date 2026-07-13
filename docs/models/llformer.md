@@ -22,15 +22,14 @@ The integrated LLFormer architecture is adapted from the official implementation
 | Model name | `LLFormer` (alias: `LL-Former`) |
 | Loss | `libllie/deepLearning/loss/LLFormer_Loss.py` |
 | Loss name | `llformer` |
-| Paired patch dataset | `libllie/data/datasets/LLFormer.py` |
 
 The default architecture matches the official training entrypoint: `dim=16`, blocks `[2, 4, 8, 16]`, heads `[1, 2, 4, 8]`, two refinement blocks, WithBias layer normalization, and no global residual skip.
 
 The official training entrypoint uses PyTorch `SmoothL1Loss`; LibLLIE registers the same objective as `llformer`. Auxiliary Charbonnier, edge, SSIM, and PSNR losses present in the upstream utility file are not part of the published training command and are therefore not enabled by default.
 
-## Dataset and patch training
+## Dataset
 
-`LLFormerPairedDataset` supports the usual paired layout:
+The configured `CommonDataset` supports the usual paired layout:
 
 ```text
 dataset/
@@ -42,7 +41,7 @@ dataset/
     high/
 ```
 
-Training uses synchronized `128×128` random crops and the same flips/rotations as the official loader. Validation keeps the full image by default. Change `data.train_params.crop_size` for other patch sizes; patch dimensions should be divisible by 16.
+Place paired low-light and target images under matching filenames. LLFormer pads inputs to dimensions divisible by 16 when needed.
 
 ## Training
 

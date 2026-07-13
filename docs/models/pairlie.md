@@ -18,7 +18,7 @@ PairLIE is the model introduced in **Learning a Simple Low-light Image Enhancer 
 | Model name | `PairLIE` (alias: `Pair-LIE`) |
 | Loss | `libllie/deepLearning/loss/PairLIE_Loss.py` |
 | Loss name | `pairlie` |
-| Dataset | `libllie/data/datasets/PairLIE.py` |
+| Dataset | `libllie/data/datasets/CommonDataset.py` |
 
 During inference, PairLIE produces:
 
@@ -40,21 +40,20 @@ L = consistency_weight * MSE(R1, R2)
 
 ## Training data
 
-PairLIE needs two different low-light instances of each scene, not a low/normal-light pair. The included `PairLIEInstancesDataset` supports the official layout:
+PairLIE needs two different low-light instances of each scene, not a low/normal-light pair. The configured `CommonDataset` uses a paired directory layout:
 
 ```text
 PairLIE-training-dataset/
-  1/
-    exposure_1.png
-    exposure_2.png
-    ...
-  2/
-    exposure_1.png
-    exposure_2.png
-    ...
+  train/
+    low/
+      scene_1.png
+      scene_2.png
+    high/
+      scene_1.png
+      scene_2.png
 ```
 
-It also accepts a `root/train/scene/...` layout. Each sample randomly selects two different images from a scene and applies the same random crop to both. Every scene folder must contain at least two supported images.
+Put the first exposure in `low` and the second exposure in `high`, using matching filenames. For PairLIE, the images in `high` are another low-light observation rather than normal-light ground truth.
 
 ## Training
 
