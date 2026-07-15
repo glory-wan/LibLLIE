@@ -26,7 +26,7 @@ result = llie.train(
     model="ZeroDCE",
     dataset="CommonDataset",
     root_dir="datasets/LOL",
-    loss="zerodce",
+    loss="zerodce_loss",
     optimizer="adam",
     lr=1e-4,
     epochs=10,
@@ -49,15 +49,25 @@ This approach is suitable for reproducible experiments because all training para
 
 ```python
 config = {
-    "model": "ZeroDCE",
-    "dataset": "CommonDataset",
-    "root_dir": "datasets/LOL",
-    "loss": "zerodce",
-    "optimizer": "adam",
-    "lr": 1e-4,
-    "epochs": 10,
-    "batch_size": 4,
-    "device": "cuda",
+    "model": {
+        "name": "ZeroDCE",
+    },
+    "data": {
+        "dataset": "CommonDataset",
+        "root_dir": "datasets/LOL",
+        "batch_size": 4,
+    },
+    "loss": {
+        "name": "zerodce_loss",
+    },
+    "optimizer": {
+        "name": "adam",
+        "lr": 1e-4,
+    },
+    "train": {
+        "epochs": 10,
+        "device": "cuda",
+    },
 }
 
 result = llie.train(config)
@@ -70,6 +80,7 @@ If a configuration file and keyword arguments are passed at the same time, keywo
 ```python
 result = llie.train(
     "libllie/deepLearning/config/ZeroDCE.yaml",
+    root_dir="datasets/LOL",
     epochs=5,
     batch_size=2,
     device="cuda",
@@ -106,7 +117,7 @@ llie.list_available()
 | `batch_size` | Batch size |
 | `device` | Training device, for example `"cuda"` or `"cpu"` |
 | `output_dir` | Training output directory |
-| `resume_path` | Checkpoint path for resuming training |
+| `resume` | Checkpoint path for resuming training; `resume_path` is accepted as an alias |
 
 The specific available parameters depend on the current `Trainer` implementation and the configurations of the model, dataset, and loss function.
 
@@ -133,12 +144,12 @@ enhanced, saved_path = llie.predict(
 
 ## Resume Training
 
-If training is interrupted, you can resume with `resume_path`:
+If training is interrupted, you can resume with `resume`:
 
 ```python
 result = llie.train(
     "libllie/deepLearning/config/ZeroDCE.yaml",
-    resume_path="checkpoints/ZeroDCE_CommonDataset/checkpoints/last.pt",
+    resume="checkpoints/ZeroDCE_CommonDataset/checkpoints/last.pt",
 )
 ```
 

@@ -11,10 +11,8 @@ llie ...
 
 | Command | Purpose |
 | --- | --- |
-| `list` | List available models, algorithms, metrics, losses, and datasets |
+| `list` | List available registered components |
 | `predict` | Run enhancement |
-| `train` | Train a model |
-| `evaluate` / `eval` | Evaluate enhanced images |
 | `imwrite` | Save or convert an image |
 
 ## List
@@ -51,23 +49,6 @@ libllie predict lime input.jpg -o results/lime.png --kwargs gamma=0.8 guided_rad
 libllie predict clahe input.jpg -o results/clahe.png --kwargs "tile_grid_size=(8, 8)" clip_limit=2.0
 ```
 
-## Train
-
-```bash
-libllie train libllie/deepLearning/config/ZeroDCE.yaml
-libllie train libllie/deepLearning/config/ZeroDCE.yaml --kwargs epochs=5 batch_size=2 device=cpu
-```
-
-`--kwargs` entries are forwarded to training.
-
-## Evaluate
-
-```bash
-libllie evaluate --en-img-dir results/ZeroDCE --ref-img-dir datasets/LOL/eval15/high --metrics PSNR SSIM --save-path results/eval.json
-libllie evaluate --en-img-dir results/ZeroDCE --metrics NIQE --save-path results/eval_no_ref.json
-libllie evaluate --en-img-dir results/ZeroDCE --metrics PSNR SSIM --kwargs device=cpu
-```
-
 ## Imwrite
 
 ```bash
@@ -81,7 +62,7 @@ libllie imwrite input.jpg -o results/copied --save-format png
 `--kwargs` supports simple Python-like values:
 
 ```bash
---kwargs lr=1e-4 epochs=10 amp=false device=cpu
+--kwargs gamma=0.8 guided_radius=15 device=cpu
 ```
 
 | Input | Parsed value |
@@ -96,7 +77,5 @@ libllie imwrite input.jpg -o results/copied --save-format png
 ```bash
 libllie --help
 libllie predict --help
-libllie train --help
-libllie evaluate --help
 libllie imwrite --help
 ```

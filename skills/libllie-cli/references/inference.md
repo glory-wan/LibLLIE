@@ -1,12 +1,14 @@
 # Inference
 
-Use this index for low-light enhancement inference with traditional algorithms, deep-learning model names, trained checkpoints, single images, folders, and image I/O. When executing examples from `docs-cli`, use `$LIBLLIE_CLI` in place of `libllie`.
+Use this index for low-light enhancement inference with traditional algorithms, deep-learning model names, trained checkpoints, single images, folders, and image I/O. When executing examples from `docs-cli`, use `"$LIBLLIE_PYTHON" -m libllie.cli` in place of `libllie`.
+
+Links in this file are documentation links under `$LIBLLIE_ROOT`; open only the linked Markdown docs needed for the task. Do not follow implementation/source paths mentioned by those docs unless the user explicitly approves source inspection.
 
 ## CLI Functions
 
-- `$LIBLLIE_CLI list`: Lists available models and traditional algorithms before choosing an inference target.
-- `$LIBLLIE_CLI predict ...`: Enhances a single image or image folder with an algorithm, model name, or checkpoint.
-- `$LIBLLIE_CLI imwrite ...`: Saves or converts image inputs with LibLLIE image writing utilities.
+- `"$LIBLLIE_PYTHON" -m libllie.cli list`: Lists available models and traditional algorithms before choosing an inference target.
+- `"$LIBLLIE_PYTHON" -m libllie.cli predict ...`: Enhances a single image or image folder with an algorithm, model name, or checkpoint.
+- `"$LIBLLIE_PYTHON" -m libllie.cli imwrite ...`: Saves or converts image inputs with LibLLIE image writing utilities.
 - `--kwargs KEY=VALUE ...`: Passes algorithm, predictor, or output options to `predict`.
 - `--help`: Shows available inference-related CLI arguments.
 
@@ -14,7 +16,7 @@ Use this index for low-light enhancement inference with traditional algorithms, 
 
 ### Guide
 
-- [docs-cli/guide/overview.md](../../../docs-cli/guide/overview.md): CLI overview for listing components, prediction, training, evaluation, and image writing.
+- [docs-cli/guide/overview.md](../../../docs-cli/guide/overview.md): CLI overview for listing components, prediction, evaluation, and image writing.
 - [docs-cli/guide/image_io.md](../../../docs-cli/guide/image_io.md): CLI image writing and supported image-source behavior.
 - [docs-cli/guide/predict.md](../../../docs-cli/guide/predict.md): CLI prediction for algorithms, model names, checkpoints, folders, and prediction options.
 
@@ -39,23 +41,23 @@ Use this index for low-light enhancement inference with traditional algorithms, 
 
 ### Deep-Learning Models
 
-- [docs-cli/models/zero-dce.md](../../../docs-cli/models/zero-dce.md): Zero-DCE CLI prediction and training entry points.
-- [docs-cli/models/zero-dce++.md](../../../docs-cli/models/zero-dce++.md): Zero-DCE++ CLI prediction and training entry points.
-- [docs-cli/models/sci.md](../../../docs-cli/models/sci.md): SCI CLI prediction and training entry points.
-- [docs-cli/models/ruas.md](../../../docs-cli/models/ruas.md): RUAS CLI prediction and training entry points.
-- [docs-cli/models/uretinex-net.md](../../../docs-cli/models/uretinex-net.md): URetinex-Net CLI prediction and training entry points.
-- [docs-cli/models/retinexformer.md](../../../docs-cli/models/retinexformer.md): RetinexFormer CLI prediction and training entry points.
-- [docs-cli/models/lednet.md](../../../docs-cli/models/lednet.md): LEDNet CLI prediction and training entry points.
-- [docs-cli/models/zero-ig.md](../../../docs-cli/models/zero-ig.md): Zero-IG CLI prediction and training entry points.
-- [docs-cli/models/darkir.md](../../../docs-cli/models/darkir.md): DarkIR CLI prediction and training entry points.
-- [docs-cli/models/llnet.md](../../../docs-cli/models/llnet.md): LLNet CLI prediction and training entry points.
-- [docs-cli/models/kind.md](../../../docs-cli/models/kind.md): KinD CLI prediction and training entry points.
-- [docs-cli/models/kind++.md](../../../docs-cli/models/kind++.md): KinD++ CLI prediction and training entry points.
-- [docs-cli/models/enlightengan.md](../../../docs-cli/models/enlightengan.md): EnlightenGAN CLI prediction and training entry points.
-- [docs-cli/models/llflow.md](../../../docs-cli/models/llflow.md): LLFlow CLI prediction and training entry points.
-- [docs-cli/models/cidnet.md](../../../docs-cli/models/cidnet.md): HVI-CIDNet CLI prediction and training entry points.
-- [docs-cli/models/pairlie.md](../../../docs-cli/models/pairlie.md): PairLIE CLI prediction and training entry points.
-- [docs-cli/models/llformer.md](../../../docs-cli/models/llformer.md): LLFormer CLI prediction and training entry points.
+- [docs-cli/models/zero-dce.md](../../../docs-cli/models/zero-dce.md): Zero-DCE CLI prediction entry point.
+- [docs-cli/models/zero-dce++.md](../../../docs-cli/models/zero-dce++.md): Zero-DCE++ CLI prediction entry point.
+- [docs-cli/models/sci.md](../../../docs-cli/models/sci.md): SCI CLI prediction entry point.
+- [docs-cli/models/ruas.md](../../../docs-cli/models/ruas.md): RUAS CLI prediction entry point.
+- [docs-cli/models/uretinex-net.md](../../../docs-cli/models/uretinex-net.md): URetinex-Net CLI prediction entry point.
+- [docs-cli/models/retinexformer.md](../../../docs-cli/models/retinexformer.md): RetinexFormer CLI prediction entry point.
+- [docs-cli/models/lednet.md](../../../docs-cli/models/lednet.md): LEDNet CLI prediction entry point.
+- [docs-cli/models/zero-ig.md](../../../docs-cli/models/zero-ig.md): Zero-IG CLI prediction entry point.
+- [docs-cli/models/darkir.md](../../../docs-cli/models/darkir.md): DarkIR CLI prediction entry point.
+- [docs-cli/models/llnet.md](../../../docs-cli/models/llnet.md): LLNet CLI prediction entry point.
+- [docs-cli/models/kind.md](../../../docs-cli/models/kind.md): KinD CLI prediction entry point.
+- [docs-cli/models/kind++.md](../../../docs-cli/models/kind++.md): KinD++ CLI prediction entry point.
+- [docs-cli/models/enlightengan.md](../../../docs-cli/models/enlightengan.md): EnlightenGAN CLI prediction entry point.
+- [docs-cli/models/llflow.md](../../../docs-cli/models/llflow.md): LLFlow CLI prediction entry point.
+- [docs-cli/models/cidnet.md](../../../docs-cli/models/cidnet.md): HVI-CIDNet CLI prediction entry point.
+- [docs-cli/models/pairlie.md](../../../docs-cli/models/pairlie.md): PairLIE CLI prediction entry point.
+- [docs-cli/models/llformer.md](../../../docs-cli/models/llformer.md): LLFormer CLI prediction entry point.
 
 ### Custom Components
 

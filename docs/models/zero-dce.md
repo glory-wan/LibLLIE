@@ -45,7 +45,7 @@ llie.train(
     model="ZeroDCE",
     dataset="CommonDataset",
     root_dir="datasets/LOL",
-    loss="zerodce",
+    loss="zerodce_loss",
     epochs=10,
     batch_size=4,
 )

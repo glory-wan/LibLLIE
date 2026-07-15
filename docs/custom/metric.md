@@ -16,8 +16,8 @@ All metric classes that inherit `BaseMetric` are automatically registered when t
 import libllie as llie
 
 llie.evaluate(
-    en_img_dir="results/MyModel",
-    ref_img_dir="datasets/LOL/eval15/high",
+    en="results/MyModel",
+    ref="datasets/LOL/eval15/high",
     metrics=["MyMetric"],
 )
 ```
@@ -145,8 +145,8 @@ Full-reference evaluation:
 import libllie as llie
 
 results = llie.evaluate(
-    en_img_dir="results/MyModel",
-    ref_img_dir="datasets/LOL/eval15/high",
+    en="results/MyModel",
+    ref="datasets/LOL/eval15/high",
     metrics=["MyMetric"],
     save_path="results/eval_my_metric.json",
 )
@@ -156,7 +156,7 @@ No-reference evaluation:
 
 ```python
 results = llie.evaluate(
-    en_img_dir="results/MyModel",
+    en="results/MyModel",
     metrics=["MyNoReferenceMetric"],
 )
 ```

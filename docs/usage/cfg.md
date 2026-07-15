@@ -27,7 +27,7 @@ The `libllie/deepLearning/config/` directory contains ready-to-edit training tem
 | `SCI.yaml` | `SCI` | `LOLv1Dataset` | `sci_loss` |
 | `URetinexNet.yaml` | `URetinexNet` | `CommonDataset` | `uretinex` |
 | `ZeroDCE++.yaml` | `ZeroDCEPlusPlus` | `LOLv1Dataset` | `zerodce++` |
-| `ZeroDCE.yaml` | `ZeroDCEPlusPlus` | `LOLv1Dataset` | `zerodce_loss` |
+| `ZeroDCE.yaml` | `ZeroDCE` | `LOLv1Dataset` | `zerodce_loss` |
 | `ZeroIG.yaml` | `ZeroIG` | `CommonDataset` | `zeroig` |
 
 Before using a template, update at least `data.root_dir` so it points to your dataset root directory.
@@ -57,7 +57,7 @@ Each training YAML file follows the same top-level structure:
 
 ```yaml
 model:
-  name: ZeroDCEPlusPlus
+  name: ZeroDCE
   params: {}
 
 data:
@@ -386,6 +386,10 @@ Common flat override keys:
 | `model_params` | `model.params` |
 | `dataset`, `dataset_name` | `data.dataset` |
 | `root_dir` | `data.root_dir` |
+| `train_low_dir` | `data.train_low_dir` |
+| `train_high_dir` | `data.train_high_dir` |
+| `val_low_dir` | `data.val_low_dir` |
+| `val_high_dir` | `data.val_high_dir` |
 | `batch_size` | `data.batch_size` |
 | `num_workers` | `data.num_workers` |
 | `train_split` | `data.train_split` |
@@ -404,7 +408,7 @@ Common flat override keys:
 | `log_every` | `train.log_every` |
 | `grad_clip` | `train.grad_clip` |
 | `amp` | `train.amp` |
-| `resume` | `train.resume` |
+| `resume`, `resume_path` | `train.resume` |
 | `seed` | `train.seed` |
 | `device` | `train.device` |
 

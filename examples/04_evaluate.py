@@ -16,8 +16,8 @@ def main():
     )
 
     results = llie.evaluate(
-        en_img_dir=enhanced_dir,
-        ref_img_dir=input_dir,
+        en=enhanced_dir,
+        ref=input_dir,
         metrics=["PSNR", "SSIM", "MSE", "NIQE"],
         save_path=save_path,
         batch_size=1,

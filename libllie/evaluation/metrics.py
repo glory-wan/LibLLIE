@@ -123,11 +123,10 @@ __all__ = [
     'MSEMetric',
     'MAEMetric',
     'LPIPSMetric',
+    'LOEMetric',
 
     # No-reference metrics.
-    'LOEMetric',
     'NIQEMetric',
-
     'MUSIQMetric',
     'PIMetric',
 ]
